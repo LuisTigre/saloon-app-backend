@@ -6,17 +6,18 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration {
     public function up(): void {
-        Schema::create('booking_style_attribute_value', function (Blueprint $table) {
+        Schema::create('hairstyle_attribute_values', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('booking_id')->constrained()->onDelete('cascade');
-            $table->foreignId('style_attribute_value_id')
-                  ->constrained('style_attribute_values')
+            $table->foreignId('hairstyle_attribute_id')
+                  ->constrained('hairstyle_attributes')
                   ->onDelete('cascade');
+            $table->string('value'); // Example: Small, Medium, Large
             $table->timestamps();
         });
     }
 
     public function down(): void {
-        Schema::dropIfExists('booking_style_attribute_value');
+        Schema::dropIfExists('hairstyle_attribute_values');
     }
 };
+

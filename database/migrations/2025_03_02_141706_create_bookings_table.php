@@ -8,8 +8,8 @@ return new class extends Migration {
     public function up(): void {
         Schema::create('bookings', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('customer_id')->constrained('users')->onDelete('cascade'); // Assuming you have a 'users' table
-            $table->foreignId('style_id')->constrained('braiding_styles')->onDelete('cascade');
+            $table->foreignId('customer_id')->constrained('users')->onDelete('cascade'); 
+            $table->foreignId('hairstyle_id')->constrained('hairstyles')->onDelete('cascade');
             $table->date('appointment_date');
             $table->time('start_time');
             $table->time('end_time');
@@ -23,4 +23,3 @@ return new class extends Migration {
         Schema::dropIfExists('bookings');
     }
 };
-

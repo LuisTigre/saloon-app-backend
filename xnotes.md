@@ -287,3 +287,8 @@ php artisan test --filter AuthTest
 - Ensure to replace `{access_token}` with the actual bearer token obtained from the login response.
 - Endpoints requiring authentication return `401 Unauthorized` if the token is missing or invalid.
 - JSON responses include error messages and validation details when applicable.
+
+**Configuring Cors:**
+```bash
+   php artisan config:publish cors
+```

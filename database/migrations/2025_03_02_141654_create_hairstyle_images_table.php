@@ -6,17 +6,16 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration {
     public function up(): void {
-        Schema::create('style_images', function (Blueprint $table) {
+        Schema::create('hairstyle_images', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('style_id')->constrained('braiding_styles')->onDelete('cascade');
+            $table->foreignId('hairstyle_id')->constrained('hairstyles')->onDelete('cascade');
             $table->string('image_url');
-            $table->boolean('is_main_image')->default(false);
+            $table->boolean('is_main')->default(false);
             $table->timestamps();
         });
     }
 
     public function down(): void {
-        Schema::dropIfExists('style_images');
+        Schema::dropIfExists('hairstyle_images');
     }
 };
-

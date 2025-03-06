@@ -6,14 +6,15 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration {
     public function up(): void {
-        Schema::create('style_attributes', function (Blueprint $table) {
+        Schema::create('hairstyle_attributes', function (Blueprint $table) {
             $table->id();
-            $table->string('attribute_name'); // Example: Braid Size, Hair Length
+            $table->string('name'); // Example: Braid Size, Hair Length
+            $table->string('category')->nullable();
             $table->timestamps();
         });
     }
 
     public function down(): void {
-        Schema::dropIfExists('style_attributes');
+        Schema::dropIfExists('hairstyle_attributes');
     }
 };

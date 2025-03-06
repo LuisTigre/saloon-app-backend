@@ -7,80 +7,48 @@ use Illuminate\Http\Request;
 
 class BookingController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
     {
-        $bookings = Booking::with('attributeValues')->get();
-        return response()->json($bookings);
+        return response()->json(Booking::all());
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request)
     {
-        $validated = $request->validate([
-            'customer_id'      => 'required|exists:users,id',
-            'style_id'         => 'required|exists:braiding_styles,id',
+        $request->validate([
+            'customer_id' => 'required|exists:users,id',
+            'style_id' => 'required|exists:hairstyles,id',
             'appointment_date' => 'required|date',
-            'start_time'       => 'required|date_format:H:i',
-            'end_time'         => 'required|date_format:H:i|after:start_time',
-            'total_price'      => 'required|numeric',
-            'status'           => 'required|in:Pending,Confirmed,Completed,Canceled',
-            // Optionally accept an array of style attribute value IDs
-            'attribute_values'      => 'sometimes|array',
-            'attribute_values.*'    => 'exists:style_attribute_values,id',
+            'start_time' => 'required',
+            'end_time' => 'required',
+            'total_price' => 'required|numeric',
+            'status' => 'required|string',
         ]);
 
-        $booking = Booking::create($validated);
-
-        if ($request->has('attribute_values')) {
-            $booking->attributeValues()->sync($request->input('attribute_values'));
-        }
-
+        $booking = Booking::create($request->all());
         return response()->json($booking, 201);
     }
 
-    /**
-     * Display the specified resource.
-     */
     public function show(Booking $booking)
     {
-        $booking->load('attributeValues');
         return response()->json($booking);
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
     public function update(Request $request, Booking $booking)
     {
-        $validated = $request->validate([
-            'customer_id'      => 'required|exists:users,id',
-            'style_id'         => 'required|exists:braiding_styles,id',
-            'appointment_date' => 'required|date',
-            'start_time'       => 'required|date_format:H:i',
-            'end_time'         => 'required|date_format:H:i|after:start_time',
-            'total_price'      => 'required|numeric',
-            'status'           => 'required|in:Pending,Confirmed,Completed,Canceled',
-            'attribute_values' => 'sometimes|array',
-            'attribute_values.*' => 'exists:style_attribute_values,id',
+        $request->validate([
+            'customer_id' => 'sometimes|exists:users,id',
+            'style_id' => 'sometimes|exists:hairstyles,id',
+            'appointment_date' => 'sometimes|date',
+            'start_time' => 'sometimes',
+            'end_time' => 'sometimes',
+            'total_price' => 'sometimes|numeric',
+            'status' => 'sometimes|string',
         ]);
 
-        $booking->update($validated);
-
-        if ($request->has('attribute_values')) {
-            $booking->attributeValues()->sync($request->input('attribute_values'));
-        }
-
+        $booking->update($request->all());
         return response()->json($booking);
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
     public function destroy(Booking $booking)
     {
         $booking->delete();

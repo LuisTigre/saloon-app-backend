@@ -11,26 +11,26 @@ class Booking extends Model
 
     protected $fillable = [
         'customer_id',
-        'style_id',
+        'hairstyle_id',
         'appointment_date',
         'start_time',
         'end_time',
         'total_price',
-        'status',
+        'status'
     ];
+
+    public function hairstyle()
+    {
+        return $this->belongsTo(Hairstyle::class);
+    }
 
     public function customer()
     {
-        return $this->belongsTo(User::class, 'customer_id');
-    }
-
-    public function style()
-    {
-        return $this->belongsTo(BraidingStyle::class, 'style_id');
+        return $this->belongsTo(User::class);
     }
 
     public function attributeValues()
     {
-        return $this->belongsToMany(\App\Models\StyleAttributeValue::class, 'booking_style_attribute_value');
+        return $this->hasMany(BookingAttributeValue::class);
     }
 }

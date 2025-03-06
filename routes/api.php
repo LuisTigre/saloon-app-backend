@@ -1,23 +1,31 @@
 <?php
 
+use App\Http\Controllers\AttributePricingController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\BookingController;
-use App\Http\Controllers\BraidingStyleController;
-use App\Http\Controllers\StyleAttributeController;
-use App\Http\Controllers\StyleAttributeValueController;
-use App\Http\Controllers\StyleImageController;
+use App\Http\Controllers\HairstyleController;
+use App\Http\Controllers\HairstyleAttributeController;
+use App\Http\Controllers\HairstyleAttributeValueController;
+use App\Http\Controllers\HairstyleImageController;
+use App\Http\Controllers\BookingAttributeValueController;
 
-// Authentication Routes
+// Test Route
+Route::get('/test', function (Request $request) {
+    return 'This is a test route';
+});
+
+// Authentication Routes 
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
 Route::post('/logout', [AuthController::class, 'logout'])->middleware('auth:sanctum');
 
-// User Routes (protected by Sanctum authentication)
+// Protected Routes (only for authenticated users)
 Route::middleware('auth:sanctum')->group(function () {
+
     // User Profile & Management
     Route::get('/user', [UserController::class, 'show']);
     Route::put('/user/{id}', [UserController::class, 'update']);
@@ -28,21 +36,28 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::put('/user/{id}/restore', [UserController::class, 'restoreAccount']);
     Route::delete('/user/{id}/soft-delete', [UserController::class, 'softDelete']);
 
-    // Optional: Admin Routes for managing users
-    Route::get('/users', [UserController::class, 'index'])->middleware('can:viewAny,App\Models\User'); // Only accessible by admin
+    // Admin Routes for User Management
+    Route::get('/users', [UserController::class, 'index'])->middleware('can:viewAny,App\Models\User');
 
-    // Booking Routes
+    // Booking Management
     Route::apiResource('bookings', BookingController::class);
 
-    // Braiding Style Routes
-    Route::apiResource('braiding-styles', BraidingStyleController::class);
-
-    // Style Attribute Routes
-    Route::apiResource('style-attributes', StyleAttributeController::class);
-
-    // Style Attribute Value Routes
-    Route::apiResource('style-attribute-values', StyleAttributeValueController::class);
-
-    // Style Image Routes
-    Route::apiResource('style-images', StyleImageController::class);
+    // Style Attributes
 });
+
+Route::apiResource('hairstyles', HairstyleController::class);
+Route::get('/hairstyles/{id}/showDetails', [HairstyleController::class, 'showDetails']);
+
+Route::get('/hairstyles-attributes/{id}/values', [HairstyleAttributeController::class, 'getHairstyleAttributesValue']);
+
+Route::apiResource('hairstyle-attributes', HairstyleAttributeController::class);
+Route::apiResource('hairstyle-attribute-values', HairstyleAttributeValueController::class);
+Route::apiResource('hairstyle-images', HairstyleImageController::class);
+Route::apiResource('bookings', BookingController::class);
+Route::apiResource('booking-hairstyle-attributes', BookingAttributeValueController::class);
+Route::apiResource('hairstyle-attribute-pricing', AttributePricingController::class);
+Route::apiResource('booking-attribute-values', BookingAttributeValueController::class);
+
+
+// Post Routes
+Route::apiResource('posts', PostController::class);
