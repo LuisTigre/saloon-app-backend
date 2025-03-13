@@ -9,7 +9,7 @@ class HairstyleAttributeController extends Controller
 {
     public function index()
     {
-        return response()->json(HairstyleAttribute::all());
+        return response()->json(HairstyleAttribute::with('values')->get());
     }
 
     public function getHairstyleAttributesValue(Request $request, $attribute_id)
@@ -29,24 +29,28 @@ class HairstyleAttributeController extends Controller
         return response()->json($attribute, 201);
     }
 
-    public function show(HairstyleAttribute $attribute)
+    public function show($id)
     {
+        $attribute = HairstyleAttribute::findOrFail($id);
         return response()->json($attribute);
     }
 
-    public function update(Request $request, HairstyleAttribute $attribute)
+    public function update(Request $request, $id)
     {
         $request->validate([
-            'name' => 'sometimes|string|max:255',
+            'name' => 'required|string|max:255',
             'category' => 'nullable|string',
         ]);
 
+        $attribute = HairstyleAttribute::findOrFail($id);
         $attribute->update($request->all());
         return response()->json($attribute);
     }
+   
 
-    public function destroy(HairstyleAttribute $attribute)
+    public function destroy($id)
     {
+        $attribute = HairstyleAttribute::findOrFail($id);
         $attribute->delete();
         return response()->json(null, 204);
     }
