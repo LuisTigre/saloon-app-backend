@@ -15,7 +15,7 @@ class HairstyleAttributeValueController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'attribute_id' => 'required|exists:hairstyle_attributes,id',
+            'hairstyle_attribute_id' => 'required',
             'value' => 'required|string|max:255',
         ]);
 
@@ -31,7 +31,7 @@ class HairstyleAttributeValueController extends Controller
     public function update(Request $request, HairstyleAttributeValue $hairstyleAttributeValue)
     {
         $request->validate([
-            'attribute_id' => 'sometimes|exists:hairstyle_attributes,id',
+            'hairstyle_attribute_id' => 'sometimes|exists:hairstyle_attributes,id',
             'value' => 'sometimes|string|max:255',
         ]);
 
