@@ -9,7 +9,11 @@ class HairstyleImage extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['hairstyle_id', 'image_url', 'is_main'];
+    protected $fillable = [
+        'hairstyle_id',
+        'image_url',
+        'is_main_image',
+    ];
 
     public function hairstyle()
     {

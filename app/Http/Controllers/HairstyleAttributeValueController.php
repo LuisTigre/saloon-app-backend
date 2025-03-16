@@ -15,7 +15,7 @@ class HairstyleAttributeValueController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'hairstyle_attribute_id' => 'required',
+            'hairstyle_attribute_id' => 'required|exists:hairstyle_attributes,id',
             'value' => 'required|string|max:255',
         ]);
 
@@ -23,25 +23,28 @@ class HairstyleAttributeValueController extends Controller
         return response()->json($attributeValue, 201);
     }
 
-    public function show(HairstyleAttributeValue $hairstyleAttributeValue)
+    public function show($id)
     {
-        return response()->json($hairstyleAttributeValue);
+        $attributeValue = HairstyleAttributeValue::findOrFail($id);
+        return response()->json($attributeValue);
     }
 
-    public function update(Request $request, HairstyleAttributeValue $hairstyleAttributeValue)
+    public function update(Request $request, $id)
     {
         $request->validate([
             'hairstyle_attribute_id' => 'sometimes|exists:hairstyle_attributes,id',
             'value' => 'sometimes|string|max:255',
         ]);
 
-        $hairstyleAttributeValue->update($request->all());
-        return response()->json($hairstyleAttributeValue);
+        $attributeValue = HairstyleAttributeValue::findOrFail($id);
+        $attributeValue->update($request->all());
+        return response()->json($attributeValue);
     }
 
-    public function destroy(HairstyleAttributeValue $hairstyleAttributeValue)
+    public function destroy($id)
     {
-        $hairstyleAttributeValue->delete();
+        $attributeValue = HairstyleAttributeValue::findOrFail($id);
+        $attributeValue->delete();
         return response()->json(null, 204);
     }
 }

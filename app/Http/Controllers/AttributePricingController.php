@@ -16,14 +16,14 @@ class AttributePricingController extends Controller
     // Store a new attribute pricing
     public function store(Request $request)
     {
-        
         $validated = $request->validate([
             'hairstyle_id' => 'required|exists:hairstyles,id',
             'hairstyle_attribute_value_id' => 'required|exists:hairstyle_attribute_values,id',
-            'additional_cost' => 'required|numeric|min:0',
-            'cost_type' => 'required|in:fixed,percentage',
+            'hairstyle_image_id' => 'nullable|exists:hairstyle_images,id', // Add validation for hairstyle_image_id
+            'additional_cost' => 'nullable|numeric|min:0',
+            'additional_time' => 'nullable|numeric|min:0',
+            'cost_type' => 'nullable|in:fixed,percentage',
         ]);
-
 
         $attributePricing = AttributePricing::create($validated);
 
@@ -42,8 +42,10 @@ class AttributePricingController extends Controller
     {
         $attributePricing = AttributePricing::findOrFail($id);
 
-        $validated = $request->validate([      
+        $validated = $request->validate([
+            'hairstyle_image_id' => 'sometimes|exists:hairstyle_images,id', // Add validation for hairstyle_image_id
             'additional_cost' => 'sometimes|numeric|min:0',
+            'additional_time' => 'sometimes|numeric|min:0',
             'cost_type' => 'sometimes|in:fixed,percentage',
         ]);
 

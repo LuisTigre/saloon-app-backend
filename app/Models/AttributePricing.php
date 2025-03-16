@@ -9,7 +9,14 @@ class AttributePricing extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['hairstyle_id', 'hairstyle_attribute_value_id', 'additional_cost', 'cost_type'];
+    protected $fillable = [
+        'hairstyle_id', 
+        'hairstyle_attribute_value_id', 
+        'hairstyle_image_id', 
+        'additional_cost', 
+        'additional_time', 
+        'cost_type'
+    ];
 
     public function hairstyle()
     {
@@ -19,5 +26,10 @@ class AttributePricing extends Model
     public function attributeValue()
     {
         return $this->belongsTo(HairstyleAttributeValue::class);
+    }
+
+    public function image()
+    {
+        return $this->belongsTo(HairstyleImage::class, 'hairstyle_image_id');
     }
 }

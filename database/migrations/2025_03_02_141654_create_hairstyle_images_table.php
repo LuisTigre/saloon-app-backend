@@ -10,7 +10,7 @@ return new class extends Migration {
             $table->id();
             $table->foreignId('hairstyle_id')->constrained('hairstyles')->onDelete('cascade');
             $table->string('image_url');
-            $table->boolean('is_main')->default(false);
+            $table->boolean('is_main_image')->default(false);
             $table->timestamps();
         });
     }

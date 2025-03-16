@@ -9,8 +9,12 @@ use Illuminate\Support\Facades\DB;
 class HairstyleController extends Controller
 {
     public function index()
-    {
-        return response()->json(Hairstyle::with('images')->get());
+    {   
+        $hairstyles_with_main_images = Hairstyle::with(['images' => function ($query) {
+            $query->where('is_main_image', 1);
+        }])->get();  
+
+        return response()->json($hairstyles_with_main_images);
     }
 
     public function store(Request $request)
@@ -61,7 +65,9 @@ class HairstyleController extends Controller
             bs.description,
             bs.duration,
             bs.price,
+            i.id as img_id,
             i.image_url,
+            i.is_main_image,
             sa.id AS attribute_id,
             sa.name AS attribute_name,
             sav.value AS attribute_value,
@@ -76,16 +82,31 @@ class HairstyleController extends Controller
     ";
 
         $results = DB::select($query, [$braidingStyleId]);
-        
+
         if (empty($results)) {
             return response()->json(['message' => 'Braiding style not found'], 404);
         }
-        
-        $collection = collect($results);
 
+        $collection = collect($results);
+        // dd($collection);
         
-        $imageUrls = $collection->pluck('image_url')->unique()->filter()->values()->toArray();
         
+        $imageUrls = $collection->sortByDesc('is_main_image')  // Sort images so main image comes first
+        ->map(function ($item) {
+            return [
+                'img_id' => $item->img_id,
+                'url' => $item->image_url,
+                'is_main_image' => $item->is_main_image,
+            ];
+        })
+        ->unique('url')  // Ensure no duplicates based on the URL
+        ->filter()  // Remove any null or empty values
+        ->values()  // Re-index the collection
+        ->toArray();
+
+// dd($imageUrls);
+
+
         $groupedAttributes = $collection->groupBy('attribute_name')->map(function ($attributes, $name) {
             // dd($attributes);
             return [
@@ -101,7 +122,7 @@ class HairstyleController extends Controller
                 })->values()->toArray(),
             ];
         })->values()->toArray();
-        
+
         $braidingStyle = [
             'id'              => $collection->first()->hairstyle_id,
             'name'            => $collection->first()->style_name,

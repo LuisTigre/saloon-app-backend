@@ -15,7 +15,7 @@ class HairstyleAttributeController extends Controller
     public function getHairstyleAttributesValue(Request $request, $attribute_id)
     {   
         $attribute = HairstyleAttribute::find($attribute_id);
-        return response()->json($attribute->values()->get());
+        return response()->json($attribute->values);
     }
 
     public function store(Request $request)

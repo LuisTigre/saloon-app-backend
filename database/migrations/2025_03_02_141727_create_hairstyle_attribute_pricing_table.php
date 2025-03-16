@@ -12,7 +12,9 @@ return new class extends Migration {
             $table->foreignId('hairstyle_attribute_value_id')
                   ->constrained('hairstyle_attribute_values')
                   ->onDelete('cascade');
+            $table->foreignId('hairstyle_image_id')->nullable()->constrained('hairstyle_images')->onDelete('cascade'); // Add this line
             $table->decimal('additional_cost', 8, 2)->default(0);
+            $table->decimal('additional_time', 8, 2)->default(0);
             $table->enum('cost_type', ['fixed', 'percentage'])->default('fixed');
             $table->timestamps();
         });
